@@ -229,3 +229,27 @@ print(df.describe())
 - [US11886157B2 — Operational optimization of industrial steam and power utility systems](https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/11886157)
 - [Mu Sigma — AI-Driven S&OP Digital Transformation for a Global Petrochemical Leader](https://www.mu-sigma.com/case-study/ai-driven-sop-digital-transformation-for-a-global-petrochemical-leader/)
 - [Integrated model of refining and petrochemical plant for enterprise-wide optimization — ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0098135416303684)
+
+---
+
+## 8. Implementation status (code in this repo)
+
+Python package `src/khalij_bimo/` (the `services/*` layout in §2-5 is collapsed into modules for now):
+
+| Module | SRS coverage |
+|---|---|
+| `simulator.py` | Phase 1 – synthetic 4-subsidiary + market feed (extends §3 to a full price deck) |
+| `margin.py` | Phase 2 – ridge price forecaster, route margins (FR-MARGIN-01), realized-margin loop (FR-LOOP-01) |
+| `optimizer.py` | Phase 3 – single LP over Processing/Bespar/Kimia/Abniroo with shared-utility constraints and transfer prices (FR-ALLOC-01, FR-UTIL-01); optional per-company margin floors; shadow prices of binding resources |
+| `reconfig.py` | Phase 4 – outage reconfiguration vs. pro-rata cutback, alert with $ impact (FR-ALLOC-02, FR-ALERT-01) |
+| `settlement.py` | Phase 5 – inter-company and utility invoices at transfer price/tariff |
+| `api.py` | Phase 6 backend – FastAPI, API-key RBAC per subsidiary + manager |
+
+All technical coefficients in `config.py` are **illustrative** and must be calibrated with real DCS/lab/settlement data.
+
+```bash
+pip install -e ".[dev]"
+pytest
+uvicorn khalij_bimo.api:app --reload      # keys: demo-manager, demo-processing, demo-bespar, demo-kimia, demo-abniroo
+python scripts/generate_data.py 10000     # synthetic CSV
+```

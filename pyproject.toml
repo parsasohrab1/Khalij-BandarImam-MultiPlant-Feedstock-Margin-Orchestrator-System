@@ -1,0 +1,16 @@
+[project]
+name = "khalij-bimo"
+version = "0.1.0"
+description = "Khalij-BIMO: multi-plant feedstock & margin orchestrator for the Bandar Imam Petrochemical Complex"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "scipy>=1.9", "scikit-learn", "fastapi", "uvicorn", "pydantic>=2"]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
